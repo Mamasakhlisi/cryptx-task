@@ -16,3 +16,21 @@ code {
 .ant-tree-node-content-wrapper {
   display: flex !important;
 }
+
+.menu{
+	padding: 15px;
+  width: 100px;
+	height:50px;
+  left:100px;
+  top:10px;
+  z-index: 111;
+}
+
+.menuItem{
+	margin: 3px 0px;
+  border:none;
+	color:#282828;
+}
+.menuItem button {
+  width:50px;
+}

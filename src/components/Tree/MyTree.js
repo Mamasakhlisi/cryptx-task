@@ -1,76 +1,40 @@
 import React, { useState, useEffect } from "react";
 import { Tree } from "antd";
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
-import { getAllChildrens } from "../../redux/tree/treeReducer";
 import { useSelector, useDispatch } from "react-redux";
-import CreateModal from './CreateModal'
+import CreateModal from "./CreateModal";
 const { DirectoryTree } = Tree;
 
 const MyTree = () => {
   const [key, setKey] = useState("");
-  const dispatch = useDispatch();
-  const { data, childrens } = useSelector((state) => state.tree);
 
-  const keyy = "id"
-  const arrayUniqueByKey = [...new Map(data.map(item =>
-    [item[keyy], item])).values()];
+  const { data } = useSelector((state) => state.tree);
 
-  const onSelect = (keys, info) => {
-    console.log("Trigger Select", keys, info);
-  };
+  const keyy = "id";
+  const arrayUniqueByKey = [
+    ...new Map(data.map((item) => [item[keyy], item])).values(),
+  ];
 
-  const onExpand = () => {
-    console.log("Trigger Expand");
-  };
 
-  function filterRec(t, f) {
-    const many = (t = []) => t.flatMap(one);
-
-    const one = (t = {}) =>
-      Boolean(f(t)) ? [{ ...t, children: many(t.children) }] : [];
-
-    return many(t);
-  }
-  const result = filterRec(data, (elem) => elem.parent === 1);
-
-  function countDown(fromNumber) {
-    fromNumber.forEach((element) => {
-      if (element.children) {
-        countDown(element.children);
-      }
-      dispatch(getAllChildrens(element));
-    });
-  }
-  
-  useEffect(() => {
-    let isMounted = true;
-    if (isMounted) {
-      countDown(result); // no more error
-    }
-    return () => {
-      isMounted = false;
-    };
-  }, [data]);
   return (
     <div>
-            <CreateModal countDown={countDown} result={result} />
+      <CreateModal />
       <DirectoryTree
         multiple
-        draggable
-        onDrop={(event) => console.log(event)}
         defaultExpandAll
-        onSelect={onSelect}
-        onExpand={onExpand}
         treeData={arrayUniqueByKey}
         titleRender={(node) => (
-          <span onContextMenu={(e) => setKey(node.key)}>{node.title}</span>
+          <ContextMenuTrigger id={`${parseInt(node.title.length)}`}>
+          <span onContextMenu={(e) => setKey(parseInt(node.title.length))}>{node.title}</span>
+          </ContextMenuTrigger>
         )}
       />
-      <ContextMenu id={key}>
+      <ContextMenu id={`${key}`} className="menu">
         <MenuItem
+        					className="menuItem"
           data={{ foo: "bar" }}
           onClick={(e) => console.log(e)}
-        ></MenuItem>
+        ><button>Edit</button></MenuItem>
       </ContextMenu>
     </div>
   );
