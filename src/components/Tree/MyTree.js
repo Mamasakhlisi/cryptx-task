@@ -3,12 +3,17 @@ import { Tree } from "antd";
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 import { getAllChildrens } from "../../redux/tree/treeReducer";
 import { useSelector, useDispatch } from "react-redux";
+import CreateModal from './CreateModal'
 const { DirectoryTree } = Tree;
 
 const MyTree = () => {
   const [key, setKey] = useState("");
   const dispatch = useDispatch();
   const { data, childrens } = useSelector((state) => state.tree);
+
+  const keyy = "id"
+  const arrayUniqueByKey = [...new Map(data.map(item =>
+    [item[keyy], item])).values()];
 
   const onSelect = (keys, info) => {
     console.log("Trigger Select", keys, info);
@@ -36,12 +41,13 @@ const MyTree = () => {
       dispatch(getAllChildrens(element));
     });
   }
-
+  
   useEffect(() => {
     countDown(result);
-  }, []);
+  }, [data]);
   return (
     <div>
+            <CreateModal countDown={countDown} result={result} />
       <DirectoryTree
         multiple
         draggable
@@ -49,11 +55,9 @@ const MyTree = () => {
         defaultExpandAll
         onSelect={onSelect}
         onExpand={onExpand}
-        treeData={data}
+        treeData={arrayUniqueByKey}
         titleRender={(node) => (
-          <ContextMenuTrigger id={node.key}>
-            <span onContextMenu={(e) => setKey(node.key)}>{node.title}</span>
-          </ContextMenuTrigger>
+          <span onContextMenu={(e) => setKey(node.key)}>{node.title}</span>
         )}
       />
       <ContextMenu id={key}>

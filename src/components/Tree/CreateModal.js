@@ -5,13 +5,17 @@ import {createChildren} from '../../redux/tree/treeReducer'
 
 const { Option } = Select;
 
-const CreateModal = () => {
+const CreateModal = ({countDown,result}) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [value, setValue] = useState(1);
+  const [key,setKey] = useState("");
   const dispatch = useDispatch();
 
   const { childrens,data } = useSelector((state) => state.tree);
 
+  const keyy = "id"
+  const arrayUniqueByKey = [...new Map(childrens.map(item =>
+    [item[keyy], item])).values()];
 
   const onChange = (e) => {
     console.log("radio checked", e.target.value);
@@ -19,17 +23,17 @@ const CreateModal = () => {
   };
 
   function handleChange(value) {
-    console.log(`selected ${value}`);
+    setKey(`${value}`)
   }
 
   const showModal = () => {
     setIsModalVisible(true);
   };
 
-  const handleOk = () => {
+  const handleOk = async () => {
     setIsModalVisible(false);
-    console.log(data)
-   console.log(dispatch(createChildren()))
+    await dispatch(createChildren(data, key, 1))
+    countDown(result);
   };
 
   const handleCancel = () => {
@@ -51,8 +55,8 @@ const CreateModal = () => {
           </Radio.Group>
         </div>
         <div style={{marginTop:"10px"}}>
-          <Select defaultValue="Choose Folder" style={{width:"250px"}}>
-            {childrens?.map((item) => <Option key={item.key} value={item.key}>{item.title}</Option>)}
+          <Select defaultValue="Choose Folder" style={{width:"250px"}} onChange={handleChange}>
+            {arrayUniqueByKey?.map((item) => <Option key={item.key} value={item.key}>{item.title}</Option>)}
           </Select>
         </div>
         <div style={{display:"flex",marginTop:"10px"}}>

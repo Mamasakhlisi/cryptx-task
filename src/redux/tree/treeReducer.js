@@ -42,48 +42,7 @@ const initialState = {
           isLeaf: true,
           parent: 0,
         },
-        {
-          title: "დათოს ფოტოები",
-          key: "0-1",
-          isLeaf: false,
-          parent: 1,
-          children: [
-            {
-              title: "File Name",
-              key: "0-1-1",
-              isLeaf: true,
-              parent: 0,
-            },
-            {
-              title: "დათო",
-              key: "0-1-2",
-              isLeaf: false,
-              parent: 1,
-              children: [
-                {
-                  title: "File Name",
-                  key: "0-1-3",
-                  isLeaf: true,
-                  parent: 0,
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      title: "დათო2 ფოლდერი",
-      key: "1",
-      isLeaf: false,
-      parent: 1,
-      children: [
-        {
-          title: "File Name",
-          key: "1-0",
-          isLeaf: true,
-          parent: 0,
-        },
+
       ],
     },
   ],
@@ -94,6 +53,7 @@ export const treeReducer = (state = initialState, action) => {
     case "GET":
       return { ...state, childrens: [...state.childrens, action.payload] };
     case "NEW":
+      console.log(action.payload)
       return state;
 
     default:
