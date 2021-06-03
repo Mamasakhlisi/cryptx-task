@@ -43,7 +43,13 @@ const MyTree = () => {
   }
   
   useEffect(() => {
-    countDown(result);
+    let isMounted = true;
+    if (isMounted) {
+      countDown(result); // no more error
+    }
+    return () => {
+      isMounted = false;
+    };
   }, [data]);
   return (
     <div>
